@@ -11,5 +11,6 @@ public interface MovementService {
     Mono<MovementDto> updateMovementById(int id, MovementDto movementDto);
     Mono<Void> deleteMovementById(int id);
     Double calculatNewBalance(double currentBalance ,MovementDto movementDto);
+    Flux<MovementDto> getMovementByClientIdn(int id);
 
 }

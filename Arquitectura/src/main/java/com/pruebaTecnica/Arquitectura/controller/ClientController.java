@@ -3,6 +3,7 @@ package com.pruebaTecnica.Arquitectura.controller;
 
 import com.pruebaTecnica.Arquitectura.dto.AccountDto;
 import com.pruebaTecnica.Arquitectura.dto.ClientDto;
+import com.pruebaTecnica.Arquitectura.dto.MovementDto;
 import com.pruebaTecnica.Arquitectura.entity.persistence.Client;
 import com.pruebaTecnica.Arquitectura.service.ClientService;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,13 @@ public class ClientController {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente con el id "
                         + id +  " no encontrado"
                 )));
+    }
+
+    @GetMapping("/clients/{identification}/movements")
+    public Flux<MovementDto> getClientByMovements(@PathVariable  String identification){
+        return clientService.getMovementsByClient(identification).
+                switchIfEmpty(Flux.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el numero de ceedula "
+                + identification + " no posee movimieentos en su cuenta")));
     }
 
     @PostMapping("/clients")
