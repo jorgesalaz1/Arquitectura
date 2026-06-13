@@ -34,12 +34,15 @@ public class ClientController {
                 )));
     }
 
-    @GetMapping("/clients/{identification}/movements")
-    public Flux<MovementDto> getClientByMovements(@PathVariable  String identification){
-        return clientService.getMovementsByClient(identification).
-                switchIfEmpty(Flux.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente con el numero de ceedula "
-                + identification + " no posee movimieentos en su cuenta")));
+    @GetMapping("/clients/cedula/{identification}")
+    public Mono<ClientDto> getClientByIdentification(@PathVariable String identification) {
+        return clientService.getClientByIdentificationReal(identification)
+                .switchIfEmpty(Mono.error(new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Cliente no encontrado con esa cédula"
+                )));
     }
+
+
 
     @PostMapping("/clients")
     public Mono<ClientDto> postClient(@RequestBody ClientDto clientDto){

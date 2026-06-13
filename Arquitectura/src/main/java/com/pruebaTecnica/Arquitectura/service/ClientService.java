@@ -11,6 +11,6 @@ public interface ClientService {
     Mono<ClientDto> postClient(ClientDto clientDto);
     Mono<ClientDto> updateClientById(int id, ClientDto clientDto);
     Mono<Void> deleteClientById(int id);
-    Flux<MovementDto> getMovementsByClient(String identification);
+    Mono<ClientDto> getClientByIdentificationReal(String identification);
 
 }

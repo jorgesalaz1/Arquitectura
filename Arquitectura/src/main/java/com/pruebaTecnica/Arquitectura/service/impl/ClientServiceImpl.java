@@ -71,13 +71,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Flux<MovementDto> getMovementsByClient(String identification) {
-        return _clientRepository.findByIdentification(identification)
-                .flatMapMany(
-                        client -> {
-                            return _movemenService.getMovementByClientIdn(client.getId());
-                        }
-                );
-
+    public Mono<ClientDto> getClientByIdentificationReal(String identification) {
+        return _clientRepository.getClientByIdentification(identification)
+                .log().map(ClientMapper::convertToDto);
     }
+
+
 }
