@@ -1,6 +1,7 @@
 package com.pruebaTecnica.Arquitectura.controller;
 
 import com.pruebaTecnica.Arquitectura.dto.MovementDto;
+import com.pruebaTecnica.Arquitectura.service.ClientMovementService;
 import com.pruebaTecnica.Arquitectura.service.MovementService;
 import com.pruebaTecnica.Arquitectura.service.impl.MovementServiceImpl;
 import com.pruebaTecnica.Arquitectura.validator.MovementsValidator;
@@ -19,10 +20,12 @@ import reactor.core.publisher.Mono;
 public class MovementsController {
     private final MovementService movementService;
     private final MovementsValidator movementsValidator;
+    private final ClientMovementService _clientMovmentService;
 
-    public MovementsController(MovementService movementService, MovementsValidator movementsValidator) {
+    public MovementsController(MovementService movementService, MovementsValidator movementsValidator, ClientMovementService clientMovementService) {
         this.movementService = movementService;
         this.movementsValidator = movementsValidator;
+        this._clientMovmentService = clientMovementService;
     }
 
     @GetMapping("/movements")
@@ -38,6 +41,12 @@ public class MovementsController {
                         + id + "no encontrado"
                 )));
     }
+
+    @GetMapping("/movements/client/{clientId}")
+    public Flux<MovementDto> getMovementsByClientId(@PathVariable int clientId) {
+        return movementService.getMovementByClientIdn(clientId);
+    }
+
 
     @PostMapping("/movements")
     public Mono<MovementDto> postMovement(@RequestBody MovementDto movementDto) {

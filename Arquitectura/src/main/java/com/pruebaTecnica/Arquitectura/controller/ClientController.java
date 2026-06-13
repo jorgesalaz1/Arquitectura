@@ -3,6 +3,7 @@ package com.pruebaTecnica.Arquitectura.controller;
 
 import com.pruebaTecnica.Arquitectura.dto.AccountDto;
 import com.pruebaTecnica.Arquitectura.dto.ClientDto;
+import com.pruebaTecnica.Arquitectura.dto.MovementDto;
 import com.pruebaTecnica.Arquitectura.entity.persistence.Client;
 import com.pruebaTecnica.Arquitectura.service.ClientService;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,16 @@ public class ClientController {
                         + id +  " no encontrado"
                 )));
     }
+
+    @GetMapping("/clients/cedula/{identification}")
+    public Mono<ClientDto> getClientByIdentification(@PathVariable String identification) {
+        return clientService.getClientByIdentificationReal(identification)
+                .switchIfEmpty(Mono.error(new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.NOT_FOUND, "Cliente no encontrado con esa cédula"
+                )));
+    }
+
+
 
     @PostMapping("/clients")
     public Mono<ClientDto> postClient(@RequestBody ClientDto clientDto){

@@ -111,4 +111,11 @@ public class MovementServiceImpl implements MovementService {
         }
     }
 
+    @Override
+    public Flux<MovementDto> getMovementByClientIdn(int id) {
+        return  _movementRepository.findByClientId(id)
+                .log()
+                .map(MovementMapper::convertToDto);
+    }
+
 }
