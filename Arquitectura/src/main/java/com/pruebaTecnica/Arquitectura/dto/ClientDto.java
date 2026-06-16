@@ -1,4 +1,4 @@
-package com.pruebaTecnica.Arquitectura.dto;
+package com.pruebatecnica.arquitectura.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
-package com.pruebaTecnica.Arquitectura.repository;
+package com.pruebatecnica.arquitectura.repository;
 
-import com.pruebaTecnica.Arquitectura.entity.persistence.Account;
+import com.pruebatecnica.arquitectura.entity.persistence.Account;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 public interface AccountRepository extends ReactiveCrudRepository<Account,Integer> {

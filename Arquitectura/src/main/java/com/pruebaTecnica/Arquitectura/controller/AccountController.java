@@ -1,11 +1,9 @@
-package com.pruebaTecnica.Arquitectura.controller;
+package com.pruebatecnica.arquitectura.controller;
 
 
-import com.pruebaTecnica.Arquitectura.dto.AccountDto;
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
-import com.pruebaTecnica.Arquitectura.service.AccountService;
-import com.pruebaTecnica.Arquitectura.service.MovementService;
-import com.pruebaTecnica.Arquitectura.validator.MovementsValidator;
+import com.pruebatecnica.arquitectura.dto.AccountDto;
+import com.pruebatecnica.arquitectura.service.AccountService;
+import com.pruebatecnica.arquitectura.validator.MovementsValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

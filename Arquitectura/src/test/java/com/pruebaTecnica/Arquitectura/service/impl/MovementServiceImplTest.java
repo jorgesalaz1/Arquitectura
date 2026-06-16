@@ -1,14 +1,10 @@
-package com.pruebaTecnica.Arquitectura.service.impl;
+package com.pruebatecnica.arquitectura.service.impl;
 
-import com.pruebaTecnica.Arquitectura.dto.AccountDto;
-import com.pruebaTecnica.Arquitectura.dto.ClientDto;
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Account;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Client;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Movement;
-import com.pruebaTecnica.Arquitectura.repository.AccountRepository;
-import com.pruebaTecnica.Arquitectura.repository.ClientRepository;
-import com.pruebaTecnica.Arquitectura.repository.MovementRepository;
+import com.pruebatecnica.arquitectura.dto.MovementDto;
+import com.pruebatecnica.arquitectura.entity.persistence.Account;
+import com.pruebatecnica.arquitectura.entity.persistence.Movement;
+import com.pruebatecnica.arquitectura.repository.AccountRepository;
+import com.pruebatecnica.arquitectura.repository.MovementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +17,6 @@ import reactor.test.StepVerifier;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;

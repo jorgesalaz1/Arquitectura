@@ -1,6 +1,6 @@
-package com.pruebaTecnica.Arquitectura.service;
+package com.pruebatecnica.arquitectura.service;
 
-import com.pruebaTecnica.Arquitectura.dto.AccountDto;
+import com.pruebatecnica.arquitectura.dto.AccountDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
