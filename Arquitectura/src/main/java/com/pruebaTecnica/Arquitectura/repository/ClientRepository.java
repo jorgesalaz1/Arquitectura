@@ -1,6 +1,6 @@
-package com.pruebaTecnica.Arquitectura.repository;
+package com.pruebatecnica.arquitectura.repository;
 
-import com.pruebaTecnica.Arquitectura.entity.persistence.Client;
+import com.pruebatecnica.arquitectura.entity.persistence.Client;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 

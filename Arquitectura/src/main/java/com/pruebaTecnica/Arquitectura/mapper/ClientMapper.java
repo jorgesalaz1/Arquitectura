@@ -1,8 +1,10 @@
-package com.pruebaTecnica.Arquitectura.mapper;
+package com.pruebatecnica.arquitectura.mapper;
 
-import com.pruebaTecnica.Arquitectura.dto.ClientDto;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Client;
+import com.pruebatecnica.arquitectura.dto.ClientDto;
+import com.pruebatecnica.arquitectura.entity.persistence.Client;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class ClientMapper {
 
     public static ClientDto convertToDto(Client client){

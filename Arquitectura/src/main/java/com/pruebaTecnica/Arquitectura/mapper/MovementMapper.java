@@ -1,11 +1,14 @@
-package com.pruebaTecnica.Arquitectura.mapper;
+package com.pruebatecnica.arquitectura.mapper;
 
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Movement;
+import com.pruebatecnica.arquitectura.dto.MovementDto;
+import com.pruebatecnica.arquitectura.entity.persistence.Movement;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class MovementMapper {
-    public static MovementDto convertToDto(Movement movement){
-        if(movement == null){
+
+    public static MovementDto convertToDto(Movement movement) {
+        if (movement == null) {
             return null;
         }
         MovementDto movementDto = new MovementDto();
@@ -20,8 +23,8 @@ public class MovementMapper {
     }
 
 
-    public static Movement convertToEntity(MovementDto movementDto){
-        if(movementDto == null){
+    public static Movement convertToEntity(MovementDto movementDto) {
+        if (movementDto == null) {
             return null;
         }
         return new Movement(
