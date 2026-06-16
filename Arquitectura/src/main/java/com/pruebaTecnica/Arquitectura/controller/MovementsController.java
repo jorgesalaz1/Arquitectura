@@ -1,16 +1,10 @@
-package com.pruebaTecnica.Arquitectura.controller;
+package com.pruebatecnica.arquitectura.controller;
 
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
-import com.pruebaTecnica.Arquitectura.service.ClientMovementService;
-import com.pruebaTecnica.Arquitectura.service.MovementService;
-import com.pruebaTecnica.Arquitectura.service.impl.MovementServiceImpl;
-import com.pruebaTecnica.Arquitectura.validator.MovementsValidator;
+import com.pruebatecnica.arquitectura.dto.MovementDto;
+import com.pruebatecnica.arquitectura.service.MovementService;
+import com.pruebatecnica.arquitectura.validator.MovementsValidator;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,12 +14,10 @@ import reactor.core.publisher.Mono;
 public class MovementsController {
     private final MovementService movementService;
     private final MovementsValidator movementsValidator;
-    private final ClientMovementService _clientMovmentService;
 
-    public MovementsController(MovementService movementService, MovementsValidator movementsValidator, ClientMovementService clientMovementService) {
+    public MovementsController(MovementService movementService, MovementsValidator movementsValidator) {
         this.movementService = movementService;
         this.movementsValidator = movementsValidator;
-        this._clientMovmentService = clientMovementService;
     }
 
     @GetMapping("/movements")

@@ -1,8 +1,8 @@
-package com.pruebaTecnica.Arquitectura.service.impl;
+package com.pruebatecnica.arquitectura.service.impl;
 
-import com.pruebaTecnica.Arquitectura.dto.AccountDto;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Account;
-import com.pruebaTecnica.Arquitectura.repository.AccountRepository;
+import com.pruebatecnica.arquitectura.dto.AccountDto;
+import com.pruebatecnica.arquitectura.entity.persistence.Account;
+import com.pruebatecnica.arquitectura.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

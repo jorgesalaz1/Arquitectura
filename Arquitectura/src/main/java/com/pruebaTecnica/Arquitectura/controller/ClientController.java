@@ -1,11 +1,8 @@
-package com.pruebaTecnica.Arquitectura.controller;
+package com.pruebatecnica.arquitectura.controller;
 
 
-import com.pruebaTecnica.Arquitectura.dto.AccountDto;
-import com.pruebaTecnica.Arquitectura.dto.ClientDto;
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Client;
-import com.pruebaTecnica.Arquitectura.service.ClientService;
+import com.pruebatecnica.arquitectura.dto.ClientDto;
+import com.pruebatecnica.arquitectura.service.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,8 +14,8 @@ import reactor.core.publisher.Mono;
 public class ClientController {
     private final ClientService clientService;
 
-    public ClientController(ClientService _clientService) {
-        this.clientService = _clientService;
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
     }
 
     @GetMapping("/clients")

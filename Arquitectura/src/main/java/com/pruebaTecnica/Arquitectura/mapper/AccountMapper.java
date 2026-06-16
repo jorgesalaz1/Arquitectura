@@ -1,8 +1,10 @@
-package com.pruebaTecnica.Arquitectura.mapper;
+package com.pruebatecnica.arquitectura.mapper;
 
-import com.pruebaTecnica.Arquitectura.dto.AccountDto;
-import com.pruebaTecnica.Arquitectura.entity.persistence.Account;
+import com.pruebatecnica.arquitectura.dto.AccountDto;
+import com.pruebatecnica.arquitectura.entity.persistence.Account;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class AccountMapper {
     public static AccountDto convertToDto(Account account){
         if(account == null){

@@ -1,4 +1,4 @@
-package com.pruebaTecnica.Arquitectura.entity.persistence;
+package com.pruebatecnica.arquitectura.entity.persistence;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

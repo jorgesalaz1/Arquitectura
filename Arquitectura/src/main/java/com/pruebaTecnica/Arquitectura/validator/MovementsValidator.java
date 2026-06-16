@@ -1,6 +1,6 @@
-package com.pruebaTecnica.Arquitectura.validator;
+package com.pruebatecnica.arquitectura.validator;
 
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
+import com.pruebatecnica.arquitectura.dto.MovementDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 

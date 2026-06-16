@@ -1,8 +1,7 @@
-package com.pruebaTecnica.Arquitectura.controller;
+package com.pruebatecnica.arquitectura.controller;
 
-import com.pruebaTecnica.Arquitectura.dto.MovementDto;
-import com.pruebaTecnica.Arquitectura.service.ClientMovementService;
-import com.pruebaTecnica.Arquitectura.service.ClientService;
+import com.pruebatecnica.arquitectura.dto.MovementDto;
+import com.pruebatecnica.arquitectura.service.ClientMovementService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +11,14 @@ import reactor.core.publisher.Flux;
 @RestController
 @RequestMapping("/api/v1/")
 public class ClientMovementController {
-    private ClientMovementService _clentMovementService;
+    private ClientMovementService clentMovementService;
 
-    public ClientMovementController(ClientMovementService _clentMovementService) {
-        this._clentMovementService = _clentMovementService;
+    public ClientMovementController(ClientMovementService clentMovementService) {
+        this.clentMovementService = clentMovementService;
     }
 
     @GetMapping("movementsIdentif/{identification}")
     public Flux<MovementDto> getByCedula(@PathVariable String identification) {
-        return _clentMovementService.getClientByIdentification(identification);
+        return clentMovementService.getClientByIdentification(identification);
     }
 }
