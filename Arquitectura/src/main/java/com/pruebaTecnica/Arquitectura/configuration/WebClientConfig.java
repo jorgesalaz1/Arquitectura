@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class WebClientConfig {
-     public static final  String URL = "http://localhost:8080/api/v1/";
+    public static final  String URL = "http://localhost:8080/api/v1/";
     @Bean
     public WebClient webClient(WebClient.Builder builder){
         return builder
