@@ -17,6 +17,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Build with maven
+        working-directory: ./Arquitectura
         run: |
           mvn clean install -DskipTests
           echo "Build successful"
