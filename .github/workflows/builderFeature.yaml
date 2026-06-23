@@ -28,5 +28,5 @@ jobs:
       - name: Build with maven
         working-directory: ./Arquitectura
         run: |
-          mvn clean test-package
+          mvn clean test package
           echo "Build successful"
