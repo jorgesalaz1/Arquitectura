@@ -2,7 +2,7 @@ name: Publish Jar as Artifact
 on:
   repository_dispatch:
     types: [publish-artifact-event]
-  jobs:
+jobs:
     download-artifact-job:
         runs-on: ubuntu-latest
         env:
