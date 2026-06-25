@@ -1,8 +1,11 @@
 name: Publish Jar as Artifact
 on:
-  workflow_dispatch:
-  repository_dispatch:
-    types: [publish-artifact-event]
+    workflow_dispatch:
+    repository_dispatch:
+      types: [publish-artifact-event]
+    push:
+        branches:
+            - develop
 jobs:
     download-artifact-job:
         runs-on: ubuntu-latest
@@ -38,6 +41,7 @@ jobs:
                           ${{ runner.os }}-maven-
 
           - name: build with maven
+            working-directory: ./Arquitectura
             run: |
               mvn clean  package -DskipTests=true --batch-mode --update-snapshots      
               ls -R target/
@@ -47,5 +51,5 @@ jobs:
             uses: actions/upload-artifact@v4
             with:
                name: artifactjar
-               path: ${{ github.workspace }}/target/${{ env.ARTIFACT_NAME }}
+               path: ${{ github.workspace }}/Arquitectura/target/${{ env.ARTIFACT_NAME }}
 
