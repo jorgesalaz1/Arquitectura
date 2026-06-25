@@ -1,5 +1,6 @@
 name: Publish Jar as Artifact
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [publish-artifact-event]
 jobs:
@@ -39,11 +40,11 @@ jobs:
           - name: build with maven
             run: |
               mvn clean test package -DskipTests=true --batch-mode --update-snapshots      
-              echo ls -R target/
+              ls -R target/
               echo ls -la
           - name: Publish Package
             if: success()
-            uses: actions/upload-artifact@v3
+            uses: actions/upload-artifact@v4
             with:
                name: artifactjar
                path: ${{ github.workspace }}/target/${{ env.ARTIFACT_NAME }}
