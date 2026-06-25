@@ -14,10 +14,10 @@ jobs:
         steps:
           - name: Debug Payload
             run: |
-                echo ${{ github.event.client_payload.base_branch }}
+                echo "Workflow iniciado"
           - uses: actions/checkout@v3
             with:
-               ref: ${{ github.event.client_payload.base_branch }}
+               ref: develop
                fetch-depth: 0
 
           - name: check last hashid
@@ -39,9 +39,9 @@ jobs:
 
           - name: build with maven
             run: |
-              mvn clean test package -DskipTests=true --batch-mode --update-snapshots      
+              mvn clean  package -DskipTests=true --batch-mode --update-snapshots      
               ls -R target/
-              echo ls -la
+              ls -la
           - name: Publish Package
             if: success()
             uses: actions/upload-artifact@v4
