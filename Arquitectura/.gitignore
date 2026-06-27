@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+.idea/easycode.ignore
+.idea/easycode/codebase-v2.xml
