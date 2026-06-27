@@ -58,7 +58,7 @@ jobs:
           echo print the current directory show files
           ls -la 
           echo preparing docker build context
-          cp .docker/Dockerfile /tmp/Dockerfile
+          cp .Arquitectura/Dockerfile /tmp/Dockerfile
           cp /tmp/artifactjar/${{ github.event.client_payload.artifact_name }} /tmp/${{ github.event.client_payload.artifact_name }}
           ls -la /tmp
 
