@@ -1,3 +1,4 @@
+# Docker image build
 FROM eclipse-temurin:17-alpine
 RUN addgroup -g 1028 devopsc \
     && adduser -D -G devopsc admin
