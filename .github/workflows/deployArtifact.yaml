@@ -1,24 +1,29 @@
 name: Deploy artifact
+
 on:
   repository_dispatch:
     types: [deploy-artifact-event]
+
 jobs:
-  dowlonad-artifact-job:
+  dowload-artifact-job:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       actions: read
+
     steps:
 
       ########################################################
-      # 1- Retrive parameters from payload and download artifact
+      # 1- Retrieve parameters from payload
       ########################################################
-      - run: echo ${{ github.event.client_payload.checksum }}
-
       - name: Retrieve Payload
         run: |
           echo ${{ github.event.client_payload.checksum }}
 
+      ########################################################
+      # 2- Download Artifact
+      ########################################################
       - uses: dawidd6/action-download-artifact@v2
         id: download-artifact
         with:
@@ -28,41 +33,36 @@ jobs:
           name: artifactjar
           path: /tmp/artifactjar
 
-      - name: Display structure of downloaded files
+      - name: Display downloaded files
         run: ls -R /tmp/artifactjar
 
+      ########################################################
+      # 3- Verify checksum
+      ########################################################
+      - name: Calculate checksum
+        run: |
+          echo "HASH=$(sha1sum /tmp/artifactjar/${{ github.event.client_payload.artifact_name }} | awk '{print $1}')" >> $GITHUB_ENV
 
-      - name: checksum of download-artifact
-        if: success()
-        id: hash
-        run: echo "HASH=$(sha1sum /tmp/artifactjar/${{ github.event.client_payload.artifact_name }} | awk '{ print $1 }')" >> $GITHUB_ENV
-
-
-      - name: compare checksum
+      - name: Compare checksum
         run: |
           if [ "${{ env.HASH }}" == "${{ github.event.client_payload.checksum }}" ]; then
-              echo "The checksum are equals! seccesfully operations."
+            echo "Checksum OK"
           else
-              echo "¡The checksum are no equals! failure operation."            
-              exit 1;
+            echo "Checksum ERROR"
+            exit 1
           fi
-      
 
       ########################################################
-      # 6- Dolowload source code from default branch in order to retrive Dockerfile, and upload it as docker build context
+      # 4- Prepare Docker Context
       ########################################################
+      - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v3
-        if: success()
-      - run: |
-          echo print the current directory show files
-          ls -la 
-          echo preparing docker build context
+      - name: Prepare Docker Context
+        run: |
           cp Arquitectura/Dockerfile /tmp/Dockerfile
           cp /tmp/artifactjar/${{ github.event.client_payload.artifact_name }} /tmp/${{ github.event.client_payload.artifact_name }}
-          ls -la /tmp
 
-      - name: Upload artifact
+      - name: Upload Docker Context
         uses: actions/upload-artifact@v4
         with:
           name: dockerBuildContext
@@ -70,71 +70,78 @@ jobs:
             /tmp/Dockerfile
             /tmp/${{ github.event.client_payload.artifact_name }}
 
-  #**************************************************************
-  #2 Job for managment docker task
-  #**************************************************************
   docker-job:
-    needs:
-      - dowlonad-artifact-job
+
+    needs: dowlonad-artifact-job
 
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       actions: read
       packages: write
+      id-token: write
+
     steps:
 
       ########################################################
-      # 1- Set up QEMU,  free and open-source emulator. It emulates the machine's processor through dynamic binary translation
+      # Docker
       ########################################################
-      - name : Set up QEMU
-        uses : docker/setup-qemu-action@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       ########################################################
-      # 2- Set up Docker Buildx
+      # Azure Login
       ########################################################
-      - name : Set up Docker Buildx
-        uses : docker/setup-buildx-action@v2
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       ########################################################
-      # 3- Login to Docker Hub
+      # Login ACR
       ########################################################
-      - name : Login to Docker Hub
-        uses : docker/login-action@v2
-        with :
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password : ${{ secrets.GITHUB_TOKEN }}
+      - name: Login Azure Container Registry
+        run: |
+          az acr login --name ${{ vars.AZURE_ACR_NAME }}
 
-        ########################################################
-        # 4- Download artifact
-        ########################################################
-      - name: Download artifact
+      ########################################################
+      # Download Docker Context
+      ########################################################
+      - name: Download Docker Context
         uses: actions/download-artifact@v4
         with:
           name: dockerBuildContext
           path: ./dockerBuildContext
 
-        ########################################################
-        # 5- Display structure
-        ########################################################
-      - name: Display structure of downloaded files
+      - name: Show Docker Context
         run: ls -R dockerBuildContext
 
-        ########################################################
-        # 5- Display structure
-        #########################################################
-      - name : Build and push image using action
-        uses : docker/build-push-action@v4
-        with :
-          context : ./dockerBuildContext # Context where Dockerfile and artifact(.jar, .war ...) lives
-          file : ./dockerBuildContext/Dockerfile # Where  Dockerfile is it.
-          #Parameters that our Dockerfile need.
+      ########################################################
+      # Build and Push Image
+      ########################################################
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./dockerBuildContext
+          file: ./dockerBuildContext/Dockerfile
+          push: true
           build-args: |
             JAR_FILE=${{ github.event.client_payload.artifact_name }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          push : true # Push image to registry, false by deafult.
-          tags : ghcr.io/${{ github.repository_owner}}/cutomer-back:${{ github.sha }} # The image ful name, include repository, user, image name and tag
+          tags: ${{ vars.AZURE_ACR_NAME }}.azurecr.io/customer-back:${{ github.sha }}
 
-
-
+      ########################################################
+      # Deploy Azure Container Apps
+      ########################################################
+      - name: Deploy Azure Container App
+        run: |
+          az containerapp update \
+            --name ${{ vars.AZURE_CONTAINER_APP }} \
+            --resource-group ${{ vars.AZURE_RESOURCE_GROUP }} \
+            --image ${{ vars.AZURE_ACR_NAME }}.azurecr.io/customer-back:${{ github.sha }}
