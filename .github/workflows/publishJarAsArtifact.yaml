@@ -75,7 +75,7 @@ jobs:
         if: success()
         uses: peter-evans/repository-dispatch@v2
         with:
-               token: ${{ secrets.GITHUB_TOKEN }}
+               token: ${{ secrets.PAT_TOKEN }}
                repository: ${{ github.repository }}
                event-type: deploy-artifact-event
                client-payload: ${{fromJSON(env.JSON_PAYLOAD) }}
