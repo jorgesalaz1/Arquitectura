@@ -1,71 +1,80 @@
-docker-job:
-  needs: download-artifact-job
-  runs-on: ubuntu-latest
+name: Deploy Artifact
 
-  permissions:
-    contents: read
-    actions: read
-    id-token: write
+on:
+  repository_dispatch:
+    types:
+      - deploy-artifact-event
 
-  steps:
+jobs:
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
+  docker-job:
+    needs: download-artifact-job
+    runs-on: ubuntu-latest
 
-    - name: Verify repository
-      run: |
-        echo "Current directory:"
-        pwd
-        echo "Repository structure:"
-        find . -maxdepth 3 -type f
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
 
-    - name: Setup QEMU
-      uses: docker/setup-qemu-action@v3
+    steps:
 
-    - name: Setup Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-        aws-region: ${{ vars.AWS_REGION }}
+      - name: Verify repository
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Repository structure:"
+          find . -maxdepth 3 -type f
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v2
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
 
-    - name: Download Docker Context
-      uses: actions/download-artifact@v4
-      with:
-        name: dockerBuildContext
-        path: dockerBuildContext
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Build and Push Docker Image
-      id: build-image
-      uses: docker/build-push-action@v6
-      with:
-        context: dockerBuildContext
-        file: dockerBuildContext/Dockerfile
-        push: true
-        build-args: |
-          JAR_FILE=${{ github.event.client_payload.artifact_name }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-        tags: |
-          ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
-    - name: Render ECS task definition
-      id: render-task-definition
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ecs/task-definition.json
-        container-name: ${{ vars.ECS_CONTAINER_NAME }}
-        image: ${{ steps.build-image.outputs.image }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Deploy ECS Service
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-      with:
-        task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
-        service: ${{ vars.ECS_SERVICE }}
-        cluster: ${{ vars.ECS_CLUSTER }}
-        wait-for-service-stability: true
+      - name: Download Docker Context
+        uses: actions/download-artifact@v4
+        with:
+          name: artifactjar
+          path: dockerBuildContext
+
+      - name: Build and Push Docker Image
+        id: build-image
+        uses: docker/build-push-action@v6
+        with:
+          context: dockerBuildContext
+          file: dockerBuildContext/Dockerfile
+          push: true
+          build-args: |
+            JAR_FILE=${{ github.event.client_payload.artifact_name }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Render ECS task definition
+        id: render-task-definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ecs/task-definition.json
+          container-name: ${{ vars.ECS_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy ECS Service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-task-definition.outputs.task-definition }}
+          service: ${{ vars.ECS_SERVICE }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          wait-for-service-stability: true
