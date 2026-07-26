@@ -8,7 +8,6 @@ on:
 jobs:
 
   docker-job:
-    needs: download-artifact-job
     runs-on: ubuntu-latest
 
     permissions:
@@ -44,11 +43,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Download Docker Context
+      - name: Download Jar Artifact
         uses: actions/download-artifact@v4
         with:
           name: artifactjar
           path: dockerBuildContext
+
+      - name: List downloaded artifact
+        run: |
+          echo "Downloaded files:"
+          ls -la dockerBuildContext
 
       - name: Build and Push Docker Image
         id: build-image
