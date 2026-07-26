@@ -5,9 +5,7 @@ RUN addgroup -g 1028 devopsc \
 
 VOLUME /tmp
 
-ARG JAR_FILE
-
-COPY ${JAR_FILE} /app/app.jar
+COPY app.jar /app/app.jar
 
 RUN chown -R admin:devopsc /app
 
