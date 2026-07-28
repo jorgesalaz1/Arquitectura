@@ -26,4 +26,5 @@ public class AccountDto {
 
     @JsonProperty("client_id")
     private int clientId;
+
 }
