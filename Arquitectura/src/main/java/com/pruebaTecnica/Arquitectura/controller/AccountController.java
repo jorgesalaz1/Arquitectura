@@ -25,13 +25,12 @@ public class AccountController {
     @GetMapping("/accounts")
     public Flux<AccountDto> getAllAccouts() {
         return accountService.getAllAccounts();
-
     }
 
     @GetMapping("/accounts/{id}")
     public Mono<AccountDto> getAccountById(@PathVariable int id) {
         return accountService.getAccounttById(id).
-                switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "objeto no enconrado "
+                switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "objeto no haalado "
                         + id + " no encntrado "
                 )));
     }
